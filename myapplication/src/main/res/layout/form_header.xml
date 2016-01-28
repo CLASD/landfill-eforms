@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="sanitation.la.project.eform.FormDetailFragment">
+
+
+
+    <TextView
+        android:text="LOPEZ CANYON LANDFILL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/locationTextView"
+        android:padding="8dp" />
+
+    <TextView
+        android:text="ENMET TARGET CALIBRATION"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/formTypeTextView"
+        android:layout_below="@+id/locationTextView"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp" />
+
+    <TextView
+        android:text="SERIAL#: xx-xxxx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deviceSerialTextView"
+        android:layout_below="@+id/formTypeTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentEnd="false" />
+
+    <TextView
+        android:text="Monthly Calibrations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoTextView"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/deviceSerialTextView"
+        android:layout_alignStart="@+id/deviceSerialTextView"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cla_seal_t"
+        android:layout_toStartOf="@+id/formTypeTextView"
+        android:layout_above="@+id/infoTextView"
+        android:layout_below="@+id/locationTextView" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/la_sanitation_logo_300"
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/formTypeTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/deviceSerialTextView"
+        android:layout_toEndOf="@+id/formTypeTextView"
+        android:padding="0dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/infoTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/stat_notify_more"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+
+</RelativeLayout>

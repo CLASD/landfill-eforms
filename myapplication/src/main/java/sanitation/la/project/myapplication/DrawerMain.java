@@ -2,8 +2,10 @@ package sanitation.la.project.myapplication;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,19 +35,23 @@ import java.util.List;
 import sanitation.la.project.myapplication.dummy.DummyContent;
 
 public class DrawerMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener {
     private boolean mTwoPane;
     private final String TAG = getClass().getSimpleName();
 
     private GoogleMap mMap;
 
+    /*
+            onCreate is called when the activity is started,
+            initialize the view and other things our app will need
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_drawer_main);      //set the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     //find a reference to the view created in xml
         setSupportActionBar(toolbar);
-
+        //saving this for later if we want to use it.
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -55,6 +61,7 @@ public class DrawerMain extends AppCompatActivity
 //            }
 //        });
 
+        //set up the side drawer menu
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -64,7 +71,7 @@ public class DrawerMain extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        //ind the spot for our fragments, and place the first one in to be displayed
         if (findViewById(R.id.list_container) != null) {
             FormListFragment fragment = new FormListFragment();
             getSupportFragmentManager().beginTransaction()
@@ -74,7 +81,47 @@ public class DrawerMain extends AppCompatActivity
 
     }
 
+    /****************************************************************************************
+     * ************************** Fragment listener methods *********************************************
+     * ****************************************************************************************
+     */
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onNewFormEntry(String arg) {
+        Uidemofragment fragment = new Uidemofragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        Bundle b = new Bundle();
+        b.putString("formArg", arg);
+        b.putInt("FORMID", 1);
+        fragment.setArguments(b);
+        transaction.replace(R.id.list_container, fragment);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+        Log.d(TAG, "Adding New form fragment");
+    }
+
+    @Override
+    public void onAddEntryClicked(int data){
+
+
+    }
+
+    /****************************************************************************************
+     * ****************************************************************************************
+     * ****************************************************************************************
+     */
+    
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -104,12 +151,13 @@ public class DrawerMain extends AppCompatActivity
             //
             navigateUpTo(new Intent(this, DrawerMain.class));
             return true;
-        } else  if (id == R.id.action_settings) {
+        } else if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    //@// TODO: 1/21/16 needs to be cleaned up and generalized for adding the specified fragment 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -126,6 +174,9 @@ public class DrawerMain extends AppCompatActivity
             Log.d(TAG, "Adding Grid fragment");
         } else if (id == R.id.nav_open) {
             Uidemofragment fragment = new Uidemofragment();
+            Bundle b = new Bundle();
+            b.putInt("FORMID", 1);
+            fragment.setArguments(b);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.list_container, fragment)
                     .commit();
@@ -176,6 +227,7 @@ public class DrawerMain extends AppCompatActivity
     }
 
 
+    // map stuff will be moved to its own fragment if/when we use it
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -191,11 +243,11 @@ public class DrawerMain extends AppCompatActivity
 
         // Add a marker in Sydney and move the camera
         LatLng lopezCanyon = new LatLng(34.286911, -118.400914);
-        LatLng schollCanyon = new LatLng( 34.152666, -118.194597);
-        LatLng bishopsCanyon = new LatLng( 34.286905, -118.400631);
-        LatLng sheldonArleta = new LatLng( 34.227111, -118.406669);
-        LatLng toyonCanyon = new LatLng( 34.146090, -118.304545);
-        LatLng gaffeyStreet = new LatLng(33.759605, -118.291736 );
+        LatLng schollCanyon = new LatLng(34.152666, -118.194597);
+        LatLng bishopsCanyon = new LatLng(34.286905, -118.400631);
+        LatLng sheldonArleta = new LatLng(34.227111, -118.406669);
+        LatLng toyonCanyon = new LatLng(34.146090, -118.304545);
+        LatLng gaffeyStreet = new LatLng(33.759605, -118.291736);
 
         ArrayList<LatLng> locations = new ArrayList<LatLng>();
         locations.add(lopezCanyon);
@@ -206,28 +258,29 @@ public class DrawerMain extends AppCompatActivity
         locations.add(gaffeyStreet);
 
 
-
 //        Bishops Canyon Landfill - land restoration complete
 //        Gaffey Street Landfill - land restoration complete
 //        Lopez Canyon Landfill - closure work complete
 //        Sheldon-Arleta Landfill - closure work complete and land redevelopment in progress
 //        Toyon Canyon Landfill -
         int i = 1;
-        for(LatLng l: locations)
+        for (LatLng l : locations)
             mMap.addMarker(new MarkerOptions().position(l).title("Landfill " + i++));
 
         //    mMap.addMarker(new MarkerOptions().position(lopezCanyon).title("Lopez Canyon Landfill"));
 
-     //   mMap.moveCamera(CameraUpdateFactory.newLatLng(lopezCanyon));
+        //   mMap.moveCamera(CameraUpdateFactory.newLatLng(lopezCanyon));
 
         float zdiff = 4.0f;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lopezCanyon, mMap.getMaxZoomLevel()-zdiff));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lopezCanyon, mMap.getMaxZoomLevel() - zdiff));
     }
 
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
     }
+
+
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
