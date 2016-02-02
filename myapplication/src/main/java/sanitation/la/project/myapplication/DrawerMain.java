@@ -29,17 +29,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
 import sanitation.la.project.myapplication.dummy.DummyContent;
 
-public class DrawerMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener {
+public class DrawerMain extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener
+{
     private boolean mTwoPane;
     private final String TAG = getClass().getSimpleName();
 
     private GoogleMap mMap;
+    private FormEntryFragment entryFrag;
 
     /*
             onCreate is called when the activity is started,
@@ -73,9 +75,10 @@ public class DrawerMain extends AppCompatActivity
 
         //ind the spot for our fragments, and place the first one in to be displayed
         if (findViewById(R.id.list_container) != null) {
-            FormListFragment fragment = new FormListFragment();
+           // FormListFragment fragment = new FormListFragment();
+            entryFrag = new FormEntryFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.list_container, fragment)
+                    .replace(R.id.list_container, entryFrag)
                     .commit();
         }
 
@@ -111,10 +114,40 @@ public class DrawerMain extends AppCompatActivity
     }
 
     @Override
-    public void onAddEntryClicked(int data){
+    public void onNewEntrySubmited(EntryData e){
+        Log.d(TAG, "New entry submited: " + e.getName() + " " + e.getData().get(0));
+        if(entryFrag != null)
+        {
+            entryFrag.addItem(e);
+            Log.d(TAG, "New entry added.");
 
+        }
+        else
+            entryFrag = new FormEntryFragment();
+        //FormEntryFragment fragment = new FormEntryFragment();
+//        Bundle b = new Bundle();
+//        b.putDouble(e.getName(),  e.getData().get(0));
+//        b.putInt("FORMID", 1);
+//        entryFrag.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, entryFrag)
+                .commit();
+        Log.d(TAG, "Adding Form Entry fragment");
+    }
+
+    @Override
+    public void onAddEntryClicked(int data){
+            Log.d(TAG, "Add new entry triggered. Data: " + data);
+            showNewEntryFrag();
 
     }
+
+    @Override
+    public void onFragmentItemClicked(int i){
+        Log.d(TAG, "Item Clicked: " + i);
+
+    }
+
 
     /****************************************************************************************
      * ****************************************************************************************
@@ -166,6 +199,8 @@ public class DrawerMain extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            showNewEntryFrag();
+
         } else if (id == R.id.nav_new) {
             ItemFragment fragment = new ItemFragment();
             getSupportFragmentManager().beginTransaction()
@@ -173,14 +208,7 @@ public class DrawerMain extends AppCompatActivity
                     .commit();
             Log.d(TAG, "Adding Grid fragment");
         } else if (id == R.id.nav_open) {
-            Uidemofragment fragment = new Uidemofragment();
-            Bundle b = new Bundle();
-            b.putInt("FORMID", 1);
-            fragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.list_container, fragment)
-                    .commit();
-            Log.d(TAG, "Adding demo fragment");
+                showFromEntryFrag();
 
         } else if (id == R.id.nav_previous) {
 
@@ -226,6 +254,28 @@ public class DrawerMain extends AppCompatActivity
         return true;
     }
 
+    private void showFromEntryFrag(){
+        FormEntryFragment fragment = new FormEntryFragment();
+        Bundle b = new Bundle();
+       // b.putDoubleArray();
+        b.putInt("FORMID", 1);
+        fragment.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, fragment)
+                .commit();
+        Log.d(TAG, "Adding Form Entry fragment");
+
+    }
+    private void showNewEntryFrag(){
+        Uidemofragment fragment = new Uidemofragment();
+        Bundle b = new Bundle();
+        b.putInt("FORMID", 1);
+        fragment.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, fragment)
+                .commit();
+        Log.d(TAG, "Adding new Entry fragment");
+    }
 
     // map stuff will be moved to its own fragment if/when we use it
     /**

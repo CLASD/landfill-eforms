@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -30,6 +33,11 @@ public class Uidemofragment extends Fragment {
 
     private int fId = 0;
     private OnFragmentInteractionListener mListener;
+
+    private Button submitButton;
+    private EditText editText1;
+    private TextView nameText1;
+    private EntryData entryData;
 
     public Uidemofragment() {
         // Required empty public constructor
@@ -70,6 +78,19 @@ public class Uidemofragment extends Fragment {
         int r = fId == 0 ? R.layout.fragment_uidemofragment : R.layout.fragment_newentry;
         View v = inflater.inflate(r, container, false);
 
+        if(fId==1){
+            editText1 = (EditText) v.findViewById(R.id.data1EditText);
+            nameText1 = (TextView) v.findViewById(R.id.data1TextView);
+
+            submitButton = (Button) v.findViewById(R.id.submitButton);
+            submitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitEntry();
+                }
+            });
+        }
+
         return v;
     }
 
@@ -97,5 +118,15 @@ public class Uidemofragment extends Fragment {
         mListener = null;
     }
 
+    public void submitEntry(){
+
+        try {
+            entryData = new EntryData(nameText1.getText().toString(), Double.parseDouble(editText1.getText().toString()) );
+            mListener.onNewEntrySubmited(entryData);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

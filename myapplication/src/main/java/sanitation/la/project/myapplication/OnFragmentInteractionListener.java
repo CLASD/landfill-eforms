@@ -20,4 +20,6 @@ public interface OnFragmentInteractionListener {
     void onFragmentInteraction(Uri uri);
     void onNewFormEntry(String arg);
     void onAddEntryClicked(int data);
+    void onFragmentItemClicked(int i);
+    void onNewEntrySubmited(EntryData e);
 }
