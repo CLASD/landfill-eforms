@@ -8,8 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import java.util.Date;
 
 
 /**
@@ -37,7 +41,10 @@ public class Uidemofragment extends Fragment {
     private Button submitButton;
     private EditText editText1;
     private TextView nameText1;
+    private EditText gridText;
     private EntryData entryData;
+    private TimePicker stime, etime;
+    private DatePicker date;
 
     public Uidemofragment() {
         // Required empty public constructor
@@ -80,6 +87,7 @@ public class Uidemofragment extends Fragment {
 
         if(fId==1){
             editText1 = (EditText) v.findViewById(R.id.data1EditText);
+            gridText = (EditText) v.findViewById(R.id.gridEditText);
             nameText1 = (TextView) v.findViewById(R.id.data1TextView);
 
             submitButton = (Button) v.findViewById(R.id.submitButton);
@@ -89,6 +97,10 @@ public class Uidemofragment extends Fragment {
                     submitEntry();
                 }
             });
+
+            stime = (TimePicker) v.findViewById(R.id.timePicker1);
+            etime = (TimePicker) v.findViewById(R.id.timePicker2);
+            date = (DatePicker) v.findViewById(R.id.datePicker);
         }
 
         return v;
@@ -121,7 +133,13 @@ public class Uidemofragment extends Fragment {
     public void submitEntry(){
 
         try {
-            entryData = new EntryData(nameText1.getText().toString(), Double.parseDouble(editText1.getText().toString()) );
+            entryData = new EntryData(nameText1.getText().toString(),
+                                Double.parseDouble(editText1.getText().toString()),
+                                Integer.parseInt(gridText.getText().toString()) ,
+                                stime.getCurrentHour()+ ":" +  stime.getCurrentMinute(),
+                                etime.getCurrentHour() + ":" +  etime.getCurrentMinute(),
+                                date.getMonth() + "/" + date.getDayOfMonth() + "/" + date.getYear());
+
             mListener.onNewEntrySubmited(entryData);
         } catch (NumberFormatException e) {
             e.printStackTrace();

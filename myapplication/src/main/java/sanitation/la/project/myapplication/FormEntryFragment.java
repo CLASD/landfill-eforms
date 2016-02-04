@@ -1,12 +1,15 @@
 package sanitation.la.project.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ import java.util.List;
  */
 public class FormEntryFragment extends Fragment {
 
+    private final String TAG = getClass().getSimpleName();
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -36,7 +40,7 @@ public class FormEntryFragment extends Fragment {
     private FloatingActionButton addNewButton;
     private  MyArrayAdapter adapter;
     private ArrayList<EntryData> data;
-
+    private DbHelper mDbHelper;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,17 +62,53 @@ public class FormEntryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data = new ArrayList<EntryData>();
+        //data = new ArrayList<Double>();
+        mDbHelper = new DbHelper(getContext());
+        //loadFromDb();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
 
-            //Double d = getArguments().getDouble("CH4 PPM");
-            for(int i=0; i<10; i++) {
-                EntryData e = new EntryData("CH4", i * .02);
-                data.add(e);
-            }
-            //data.add(d);
 
+//            Bundle b = getArguments();
+//            double d[] = b.getDoubleArray("DATA");
+//            for(double a: d) {
+//                data.add(a);
+//                Log.d(TAG, "LIST DATA: " + a);
+//            }
+
+//            //Double d = getArguments().getDouble("CH4 PPM");
+//            for(int i=0; i<10; i++) {
+//                EntryData e = new EntryData("CH4", i * .02);
+//                data.add(e);
+//            }
+            //data.add(d);
+        }
+
+    }
+
+    public void loadFromDb(){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID,
+                lacDbEntry.mEntry.COLUMN_NAME_TITLE,
+                //lacDbEntry.mEntry.COLUMN_NAME_CONTENT,
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID + " ASC";
+        String[] args = {""};
+        Cursor c = db.query(lacDbEntry.mEntry.TABLE_NAME, projection, null, null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        while(c.moveToNext()){
+            Log.d(TAG, " " + c.getString(0) + " " + c.getString(1) ); //+ " " + c.getString(2));
 
         }
     }
@@ -85,7 +125,7 @@ public class FormEntryFragment extends Fragment {
             }
         });
 
-
+        data = mListener.getData();
         adapter = new MyArrayAdapter(getContext(),  data);
 
         ListView listView = (ListView) view.findViewById(R.id.list);
@@ -111,6 +151,8 @@ public class FormEntryFragment extends Fragment {
     }
 
     public void addItem(EntryData e){
+        Log.d(TAG, "Adding data to list... " + e.getName());
+
         data.add(e);
         adapter.notifyDataSetChanged();
 

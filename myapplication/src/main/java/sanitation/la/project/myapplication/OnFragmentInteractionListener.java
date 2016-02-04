@@ -2,6 +2,8 @@ package sanitation.la.project.myapplication;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
+
 /**
  * Created by saul on 1/14/16.
  */
@@ -22,4 +24,5 @@ public interface OnFragmentInteractionListener {
     void onAddEntryClicked(int data);
     void onFragmentItemClicked(int i);
     void onNewEntrySubmited(EntryData e);
+    ArrayList<EntryData> getData();
 }

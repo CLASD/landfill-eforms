@@ -16,20 +16,79 @@
         android:layout_height="fill_parent"
         android:id="@+id/include" />
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="220dp">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|fill_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="0dp">
+
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Start Time"
+                    android:id="@+id/stlabel"
+                    android:layout_weight="1"
+                    android:paddingTop="20dp" />
+
+
+                <TimePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/timePicker1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="End Time"
+                    android:id="@+id/etlabel"
+                    android:layout_weight="1"
+                    android:paddingTop="20dp" />
+                <TimePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/timePicker2" />
+
+                <DatePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/datePicker"
+                    android:calendarViewShown="false"
+                    />
+
+            </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|fill_vertical"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="200dp">
+        android:layout_alignParentLeft="false"
+        android:layout_marginTop="200dp"
+        android:layout_alignParentRight="true">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="CH4 PPM"
-            android:id="@+id/data1TextView"
+            android:text="Grid Id"
+            android:id="@+id/gridLabel"
             android:layout_weight="1"
             android:paddingTop="20dp" />
 
@@ -37,22 +96,41 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:ems="10"
-            android:id="@+id/data1EditText"
+            android:id="@+id/gridEditText"
             android:layout_weight="1" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_entry_button_text"
-            android:id="@+id/submitButton"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:textColor="#e5e5e5"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_marginTop="20dp" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="CH4 PPM"
+                android:id="@+id/data1TextView"
+                android:layout_weight="1"
+                android:paddingTop="20dp" />
+
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/data1EditText"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_entry_button_text"
+                android:id="@+id/submitButton"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="#e5e5e5"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+
 
 </RelativeLayout>

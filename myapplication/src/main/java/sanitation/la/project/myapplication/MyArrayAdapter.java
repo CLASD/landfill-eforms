@@ -1,6 +1,7 @@
 package sanitation.la.project.myapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,13 +39,18 @@ public class MyArrayAdapter extends ArrayAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.fragment_form_entry, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.content);
+        TextView info = (TextView) rowView.findViewById(R.id.infoTextView);
        // ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 
 
+        //double
         EntryData e = data.get(position);
-        String s = "" + e.getName() + e.getData().get(0);
-
+        String s = "Grid id: " + e.getGrid() + " [ " + e.getData().get(0) + " ] " + e.getName() ;
+        info.setText(String.format("%s - %s : %s", e.getStartTimeStr(), e.getEndTimeStr(), e.getDateStr()));
         textView.setText(s);
+
+        if(e.getData().get(0) >= 500.)
+            textView.setTextColor(Color.RED);
 
         return rowView;
     }

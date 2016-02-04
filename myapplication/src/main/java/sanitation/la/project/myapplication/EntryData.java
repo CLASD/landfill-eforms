@@ -7,14 +7,19 @@ import java.util.ArrayList;
  */
 public class EntryData {
 
-    private int id;
-    private String name;
+    private int id, grid;
+    private String name, stime, etime, date;
     private ArrayList<Double> data;
 
-    public EntryData(String name, double data){
+
+    public EntryData(String name, double data, int grid, String s, String e, String d){
         this.name = name;
         this.data = new ArrayList<Double>();
         this.data.add(data);
+        this.grid = grid;
+        stime = s;
+        etime = e;
+        date = d;
     }
 
     public String getName(){
@@ -31,5 +36,10 @@ public class EntryData {
     public int getDataSize(){
         return data.size();
     }
+
+    public int getGrid(){ return grid; }
+    public String getStartTimeStr(){ return stime; }
+    public String getEndTimeStr(){ return etime; }
+    public String getDateStr(){ return date; }
 
 }

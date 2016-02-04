@@ -1,7 +1,9 @@
 package sanitation.la.project.myapplication;
 
 import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
     private GoogleMap mMap;
     private FormEntryFragment entryFrag;
+    private DbHelper mDbHelper;
 
+    //very temp
+    private ArrayList<EntryData> tempData;
     /*
             onCreate is called when the activity is started,
             initialize the view and other things our app will need
@@ -53,6 +59,8 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         setContentView(R.layout.activity_drawer_main);      //set the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     //find a reference to the view created in xml
         setSupportActionBar(toolbar);
+        mDbHelper = new DbHelper(getApplicationContext());
+
         //saving this for later if we want to use it.
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -113,20 +121,48 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         Log.d(TAG, "Adding New form fragment");
     }
 
+    private void addEntryToDb(EntryData e){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+         // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID, e.getId());
+        values.put(lacDbEntry.mEntry.COLUMN_NAME_TITLE, e.getName());
+        values.put(lacDbEntry.mEntry.COLUMN_NAME_CONTENT, e.getData().get(0));
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId;
+        newRowId = db.insert(
+                lacDbEntry.mEntry.TABLE_NAME,
+                lacDbEntry.mEntry.COLUMN_NAME_NULLABLE,
+                values);
+
+        Log.d(TAG, "New entry added.");
+    }
     @Override
     public void onNewEntrySubmited(EntryData e){
         Log.d(TAG, "New entry submited: " + e.getName() + " " + e.getData().get(0));
-        if(entryFrag != null)
-        {
-            entryFrag.addItem(e);
-            Log.d(TAG, "New entry added.");
+         //   addEntryToDb(e);
+        if(tempData == null)
+            tempData = new ArrayList<EntryData>();
 
-        }
-        else
-            entryFrag = new FormEntryFragment();
+        tempData.add(e);
+      //  tempData.addAll(e.getData());
+
+//        if(entryFrag != null)
+//        {
+//           // entryFrag.addItem(e);
+//
+//            Log.d(TAG, "New entry added.");
+//
+//        }
+//        else
+        if(entryFrag == null)  entryFrag = new FormEntryFragment();
+
         //FormEntryFragment fragment = new FormEntryFragment();
 //        Bundle b = new Bundle();
-//        b.putDouble(e.getName(),  e.getData().get(0));
+//        b.putDoubleArray("DATA", toDArray(tempData));
 //        b.putInt("FORMID", 1);
 //        entryFrag.setArguments(b);
         getSupportFragmentManager().beginTransaction()
@@ -136,8 +172,24 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     }
 
     @Override
+    public ArrayList<EntryData> getData(){
+        if(tempData == null)
+            return new ArrayList<EntryData>();
+        return tempData;
+    }
+    private double[] toDArray(ArrayList<Double> in) {
+        double[] o = new double[in.size()];
+        for(int i=0; i<in.size(); i++)
+            o[i] = in.get(i);
+
+        return o;
+
+    }
+
+    @Override
     public void onAddEntryClicked(int data){
             Log.d(TAG, "Add new entry triggered. Data: " + data);
+            tempData = entryFrag.getData();
             showNewEntryFrag();
 
     }
