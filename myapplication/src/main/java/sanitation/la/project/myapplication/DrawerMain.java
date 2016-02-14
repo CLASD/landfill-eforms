@@ -1,6 +1,5 @@
 package sanitation.la.project.myapplication;
 
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,15 +27,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.lang.reflect.Array;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
+import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.dummy.DummyContent;
+import sanitation.la.project.myapplication.helpers.DbHelper;
+import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
+import sanitation.la.project.myapplication.helpers.lacDbEntry;
+import sanitation.la.project.myapplication.ui.FormDetailFragment;
+import sanitation.la.project.myapplication.ui.FormEntryFragment;
+import sanitation.la.project.myapplication.ui.FormListFragment;
+import sanitation.la.project.myapplication.ui.ItemFragment;
+import sanitation.la.project.myapplication.ui.MenuFragment;
+import sanitation.la.project.myapplication.ui.Uidemofragment;
 
 public class DrawerMain extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener
 {
