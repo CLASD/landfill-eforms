@@ -2,6 +2,9 @@ package sanitation.la.project.myapplication.helpers;
 
 /**
  * Created by saul on 2/13/16.
+ *
+ * modifed from
+ * http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
  */
 
 //GPSTracker.java
@@ -29,6 +32,7 @@ public class LocationHelper extends Service implements LocationListener {
 
     // flag for network status
     boolean isNetworkEnabled = false;
+    private boolean useNetwork = false;
 
     // flag for GPS status
     boolean canGetLocation = false;
@@ -38,10 +42,10 @@ public class LocationHelper extends Service implements LocationListener {
     double longitude; // longitude
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 10 * 1; // 1 minute
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -49,6 +53,10 @@ public class LocationHelper extends Service implements LocationListener {
     public LocationHelper(Context context) {
         this.mContext = context;
         getLocation();
+    }
+
+    public void setNetworkEnabled(boolean b){
+        useNetwork = b;
     }
 
     public Location getLocation() {
@@ -60,10 +68,11 @@ public class LocationHelper extends Service implements LocationListener {
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            // getting network status
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
+            if(useNetwork) {
+                // getting network status
+                isNetworkEnabled = locationManager
+                        .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            }
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
             } else {

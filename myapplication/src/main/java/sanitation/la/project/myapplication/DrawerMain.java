@@ -41,6 +41,7 @@ import sanitation.la.project.myapplication.ui.FormDetailFragment;
 import sanitation.la.project.myapplication.ui.FormEntryFragment;
 import sanitation.la.project.myapplication.ui.FormListFragment;
 import sanitation.la.project.myapplication.ui.ItemFragment;
+import sanitation.la.project.myapplication.ui.LocationTestFragment;
 import sanitation.la.project.myapplication.ui.MenuFragment;
 import sanitation.la.project.myapplication.ui.Uidemofragment;
 
@@ -294,9 +295,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         } else if (id == R.id.nav_map) {
             Log.d(TAG, "Show map clicked.");
             if (findViewById(R.id.list_container) != null) {
-                SupportMapFragment mapFragment = new SupportMapFragment();
-                mapFragment.getMapAsync(this);
+                //SupportMapFragment mapFragment = new SupportMapFragment();
+                //mapFragment.getMapAsync(this);
 
+                LocationTestFragment mapFragment = new LocationTestFragment();
 
                 //MapsFragment fragment = new MapsFragment();
                 getSupportFragmentManager().beginTransaction()
