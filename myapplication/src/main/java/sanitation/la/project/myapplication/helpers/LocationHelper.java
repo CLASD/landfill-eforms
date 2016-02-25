@@ -29,10 +29,10 @@ public class LocationHelper extends Service implements LocationListener {
 
     // flag for GPS status
     boolean isGPSEnabled = false;
+    private boolean gpsOnly = true;
 
     // flag for network status
     boolean isNetworkEnabled = false;
-    private boolean useNetwork = false;
 
     // flag for GPS status
     boolean canGetLocation = false;
@@ -56,7 +56,8 @@ public class LocationHelper extends Service implements LocationListener {
     }
 
     public void setNetworkEnabled(boolean b){
-        useNetwork = b;
+        isNetworkEnabled = b;
+        getLocation();
     }
 
     public Location getLocation() {
@@ -68,11 +69,12 @@ public class LocationHelper extends Service implements LocationListener {
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            if(useNetwork) {
+            if(!gpsOnly) {
                 // getting network status
                 isNetworkEnabled = locationManager
                         .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             }
+
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
             } else {

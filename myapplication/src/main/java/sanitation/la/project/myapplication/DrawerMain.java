@@ -28,7 +28,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +42,7 @@ import sanitation.la.project.myapplication.dummy.DummyContent;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
 import sanitation.la.project.myapplication.helpers.lacDbEntry;
+import sanitation.la.project.myapplication.ui.ExportFragment;
 import sanitation.la.project.myapplication.ui.FormDetailFragment;
 import sanitation.la.project.myapplication.ui.FormEntryFragment;
 import sanitation.la.project.myapplication.ui.FormListFragment;
@@ -207,6 +213,26 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
     }
 
+    @Override
+    public void exportClicked(){
+        Log.d(TAG, "Export Clicked: ");
+        String t = null;
+        try {
+            Gson g = new Gson();
+            t = g.toJson(tempData);
+            File myFile = new File("/sdcard/clasandata.json");
+            myFile.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(myFile);
+            OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+            myOutWriter.append(t);
+            myOutWriter.close();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "Json File Exported");
+    }
 
     /****************************************************************************************
      * ****************************************************************************************
@@ -261,7 +287,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             showNewEntryFrag();
 
         } else if (id == R.id.nav_new) {
-            ItemFragment fragment = new ItemFragment();
+            Uidemofragment fragment = new Uidemofragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.list_container, fragment)
                     .commit();
@@ -279,16 +305,24 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             }
 
         } else if (id == R.id.nav_share) {
-            Log.d(TAG, "Share/Send.");
-            if (findViewById(R.id.list_container) != null) {
-                MenuFragment mf = new MenuFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.list_container, mf)
-                        .commit();
-                Log.d(TAG, "Grid placed");
-            }
+            Log.d(TAG, "Share/Update.");
+//            if (findViewById(R.id.list_container) != null) {
+//                MenuFragment mf = new MenuFragment();
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.list_container, mf)
+//                        .commit();
+//                Log.d(TAG, "Grid placed");
+//            }
 
         } else if (id == R.id.nav_send) {
+            Log.d(TAG, "Send/Export.");
+            if (findViewById(R.id.list_container) != null) {
+                ExportFragment f = new ExportFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.list_container, f)
+                        .commit();
+                Log.d(TAG, "Export placed");
+            }
 
         } else if (id == R.id.nav_settings) {
 
