@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import sanitation.la.project.myapplication.data.EntryData;
@@ -214,13 +216,17 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     }
 
     @Override
-    public void exportClicked(){
+    public String exportClicked(){
         Log.d(TAG, "Export Clicked: ");
-        String t = null;
+        Date d = new Date();
+        String name = "clasandata " + d.toString() + ".json";
+        String path = "LandfillData";
         try {
             Gson g = new Gson();
-            t = g.toJson(tempData);
-            File myFile = new File("/sdcard/clasandata.json");
+            String t = g.toJson(tempData);
+            File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
+            myFile.mkdirs();
+            myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path+File.separator+name);
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
@@ -229,9 +235,11 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             fOut.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         Log.d(TAG, "Json File Exported");
+        return name;
     }
 
     /****************************************************************************************

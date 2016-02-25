@@ -27,5 +27,5 @@ public interface OnFragmentInteractionListener {
     void onFragmentItemClicked(int i);
     void onNewEntrySubmited(EntryData e);
     ArrayList<EntryData> getData();
-    void exportClicked();
+    String exportClicked();
 }
