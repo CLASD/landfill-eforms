@@ -39,6 +39,7 @@ public class FormEntryFragment extends Fragment {
     private MyArrayAdapter adapter;
     private ArrayList<EntryData> data;
     private DbHelper mDbHelper;
+    private int formId = 0;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,7 +66,8 @@ public class FormEntryFragment extends Fragment {
         //loadFromDb();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-
+            Bundle b = getArguments();
+            formId = b.getInt("FORMID");
 
 //            Bundle b = getArguments();
 //            double d[] = b.getDoubleArray("DATA");
@@ -84,6 +86,7 @@ public class FormEntryFragment extends Fragment {
 
     }
 
+    // TODO: 3/3/16  make this work, and switch tables based on formId, everything else should be good
     public void loadFromDb(){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -119,7 +122,7 @@ public class FormEntryFragment extends Fragment {
         addNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAddEntryClicked(0);
+                mListener.onAddEntryClicked(formId);
             }
         });
 

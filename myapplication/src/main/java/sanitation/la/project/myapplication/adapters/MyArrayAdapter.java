@@ -51,7 +51,7 @@ public class MyArrayAdapter extends ArrayAdapter {
         info.setText(String.format("%s - %s : %s", e.getStartTimeStr(), e.getEndTimeStr(), e.getDateStr()));
         textView.setText(s);
 
-        if(e.getData().get(0) >= 500.)
+        if(e.getData().get(0).getData() >= 500.)
             textView.setTextColor(Color.RED);
 
         return rowView;

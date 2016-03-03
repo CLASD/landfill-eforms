@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants"
+    >
 
     <TextView
         android:id="@+id/id"
@@ -47,7 +49,8 @@
         android:id="@+id/editButton"
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        />
 
 
 

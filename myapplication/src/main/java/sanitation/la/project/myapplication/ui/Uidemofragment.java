@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -47,6 +49,8 @@ public class Uidemofragment extends Fragment {
     private EntryData entryData;
     private TimePicker stime, etime;
     private DatePicker date;
+    private TextView formTypeText;
+    private LinearLayout linearLayout;
 
     public Uidemofragment() {
         // Required empty public constructor
@@ -84,10 +88,12 @@ public class Uidemofragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        int r = fId == 0 ? R.layout.fragment_uidemofragment : R.layout.fragment_newentry;
+        int r = fId == -1 ? R.layout.fragment_uidemofragment : R.layout.fragment_newentry;
         View v = inflater.inflate(r, container, false);
 
-        if(fId==1){
+        if(fId >= 0){
+            formTypeText = (TextView) v.findViewById(R.id.formTypeTextView);
+
             editText1 = (EditText) v.findViewById(R.id.data1EditText);
             gridText = (EditText) v.findViewById(R.id.gridEditText);
             nameText1 = (TextView) v.findViewById(R.id.data1TextView);
@@ -103,7 +109,28 @@ public class Uidemofragment extends Fragment {
             stime = (TimePicker) v.findViewById(R.id.timePicker1);
             etime = (TimePicker) v.findViewById(R.id.timePicker2);
             date = (DatePicker) v.findViewById(R.id.datePicker);
+            linearLayout = (LinearLayout) v.findViewById(R.id.newEntryLinear);
+
         }
+        //for instantaneous or hotspot (same data) I thinks
+        if(fId==0) {
+            formTypeText.setText("Instantaneous");
+        } else if(fId == 1){
+            formTypeText.setText("Hot Spot");
+        } else if(fId == 2){
+            formTypeText.setText("Integrated");
+
+            TextView t = new TextView(getContext()); //, new AttributeSet());
+            t.setText("Bag #");
+            EditText e = new EditText(getContext());
+            linearLayout.removeView(submitButton);
+            linearLayout.addView(t);
+            linearLayout.addView(e);
+            linearLayout.addView(submitButton);
+
+        }
+
+
 
         return v;
     }

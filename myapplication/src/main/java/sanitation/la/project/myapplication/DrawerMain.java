@@ -48,6 +48,7 @@ import sanitation.la.project.myapplication.ui.ExportFragment;
 import sanitation.la.project.myapplication.ui.FormDetailFragment;
 import sanitation.la.project.myapplication.ui.FormEntryFragment;
 import sanitation.la.project.myapplication.ui.FormListFragment;
+import sanitation.la.project.myapplication.ui.FormPickerFragment;
 import sanitation.la.project.myapplication.ui.ItemFragment;
 import sanitation.la.project.myapplication.ui.LocationTestFragment;
 import sanitation.la.project.myapplication.ui.MenuFragment;
@@ -144,7 +145,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         ContentValues values = new ContentValues();
         values.put(lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID, e.getId());
         values.put(lacDbEntry.mEntry.COLUMN_NAME_TITLE, e.getName());
-        values.put(lacDbEntry.mEntry.COLUMN_NAME_CONTENT, e.getData().get(0));
+        values.put(lacDbEntry.mEntry.COLUMN_NAME_CONTENT, e.getData().get(0).getData());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId;
@@ -202,10 +203,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     }
 
     @Override
-    public void onAddEntryClicked(int data){
-            Log.d(TAG, "Add new entry triggered. Data: " + data);
+    public void onAddEntryClicked(int id){
+            Log.d(TAG, "Add new entry triggered. Data: " + id);
             tempData = entryFrag.getData();
-            showNewEntryFrag();
+            showNewEntryFrag(id);
 
     }
 
@@ -227,6 +228,11 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
             myFile.mkdirs();
             myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path+File.separator+name);
+
+//            File myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path);
+//            myFile.mkdirs();
+//            myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path+File.separator+name);
+
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
@@ -240,6 +246,26 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
         Log.d(TAG, "Json File Exported");
         return name;
+    }
+
+    @Override
+    public void onFormPicked(int pos){
+        if(pos == 0){
+            //instananeous
+            Log.d(TAG, "Instantaneous Form Picked");
+
+
+        } else if(pos == 1){
+            // hotspot
+            Log.d(TAG, "hotspot Form Picked");
+        }
+        else if(pos == 2){
+            //integrated
+            Log.d(TAG, "integrated Form Picked");
+        }
+        //open the FormEntryFragment (list of entries for a form type)
+        showFromEntryFrag(pos);
+
     }
 
     /****************************************************************************************
@@ -292,7 +318,14 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            showNewEntryFrag();
+            showNewEntryFrag(0);
+
+        } else if (id == R.id.nav_forms) {
+            FormPickerFragment fragment = new FormPickerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.list_container, fragment)
+                    .commit();
+            Log.d(TAG, "Adding Grid fragment");
 
         } else if (id == R.id.nav_new) {
             Uidemofragment fragment = new Uidemofragment();
@@ -301,7 +334,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
                     .commit();
             Log.d(TAG, "Adding Grid fragment");
         } else if (id == R.id.nav_open) {
-                showFromEntryFrag();
+                showFromEntryFrag(0);
 
         } else if (id == R.id.nav_previous) {
 
@@ -356,11 +389,11 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         return true;
     }
 
-    private void showFromEntryFrag(){
+    private void showFromEntryFrag(int id){
         FormEntryFragment fragment = new FormEntryFragment();
         Bundle b = new Bundle();
        // b.putDoubleArray();
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", id);
         fragment.setArguments(b);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.list_container, fragment)
@@ -368,10 +401,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         Log.d(TAG, "Adding Form Entry fragment");
 
     }
-    private void showNewEntryFrag(){
+    private void showNewEntryFrag(int id){
         Uidemofragment fragment = new Uidemofragment();
         Bundle b = new Bundle();
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", id);
         fragment.setArguments(b);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.list_container, fragment)
