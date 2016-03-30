@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,6 +53,7 @@ import sanitation.la.project.myapplication.ui.FormPickerFragment;
 import sanitation.la.project.myapplication.ui.ItemFragment;
 import sanitation.la.project.myapplication.ui.LocationTestFragment;
 import sanitation.la.project.myapplication.ui.MenuFragment;
+import sanitation.la.project.myapplication.ui.MessageDialogFragment;
 import sanitation.la.project.myapplication.ui.Uidemofragment;
 
 public class DrawerMain extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener
@@ -62,6 +64,13 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     private GoogleMap mMap;
     private FormEntryFragment entryFrag;
     private DbHelper mDbHelper;
+
+    private enum FORM_TYPE {INSTANTANEOUS, INTEGRATED, HOTSPOT}
+
+    private FORM_TYPE formID = FORM_TYPE.INSTANTANEOUS;
+
+
+    private int formType = 0;
 
     //very temp
     private ArrayList<EntryData> tempData;
@@ -127,7 +136,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         // and add the transaction to the back stack
         Bundle b = new Bundle();
         b.putString("formArg", arg);
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", formType);
         fragment.setArguments(b);
         transaction.replace(R.id.list_container, fragment);
         transaction.addToBackStack(null);
@@ -164,6 +173,15 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             tempData = new ArrayList<EntryData>();
 
         tempData.add(e);
+
+        //it is instantaneous entry, valid and over 500 ppm
+        if(formType == 0 && e.getDataSize() >=  1 && e.getData().get(0).getData() >= 500.){
+            Log.d(TAG, "Hot spot detected");
+
+
+            DialogFragment newFragment = MessageDialogFragment.newInstance(e);
+            newFragment.show(getSupportFragmentManager(), "dialog");
+        }
       //  tempData.addAll(e.getData());
 
 //        if(entryFrag != null)
@@ -253,18 +271,32 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         if(pos == 0){
             //instananeous
             Log.d(TAG, "Instantaneous Form Picked");
+            formID = FORM_TYPE.INSTANTANEOUS;
 
 
         } else if(pos == 1){
             // hotspot
             Log.d(TAG, "hotspot Form Picked");
+            formID = FORM_TYPE.HOTSPOT;
         }
         else if(pos == 2){
             //integrated
             Log.d(TAG, "integrated Form Picked");
+            formID = FORM_TYPE.INTEGRATED;
         }
+
+        formType = pos;
         //open the FormEntryFragment (list of entries for a form type)
         showFromEntryFrag(pos);
+
+    }
+
+
+    public void openHotspotEntry(){
+        Log.d(TAG, "Creating new hot spot entry");
+        formID = FORM_TYPE.HOTSPOT;
+        formType = 1;
+        showNewHotspot();
 
     }
 
@@ -406,6 +438,24 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         Bundle b = new Bundle();
         b.putInt("FORMID", id);
         fragment.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, fragment)
+                .commit();
+        Log.d(TAG, "Adding new Entry fragment");
+    }
+
+    private void showNewHotspot(){
+        Uidemofragment fragment = new Uidemofragment();
+        Bundle b = new Bundle();
+        b.putInt("FORMID", 1);   //hot spot! always
+        fragment.setArguments(b);
+        if(tempData.size() > 0 ) {
+            //pre populate
+            EntryData e = tempData.get(tempData.size() - 1);
+            b.putInt("GridID", e.getGrid());
+            b.putDouble("ch4ppm", e.getData().get(0).getData());
+            b.putString("IME", "temp123");
+        }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.list_container, fragment)
                 .commit();
