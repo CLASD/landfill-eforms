@@ -41,6 +41,8 @@ import java.util.List;
 
 import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.dummy.DummyContent;
+import sanitation.la.project.myapplication.formClass.Instantaneous;
+import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
 import sanitation.la.project.myapplication.helpers.lacDbEntry;
@@ -104,6 +106,20 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.list_container, entryFrag)
                     .commit();
+        }
+
+        // sqlite
+        DatabaseHandler db = new DatabaseHandler(this);
+        List<Instantaneous> instantaneous = db.getAllInstantaneous();
+
+        // printing
+        for(Instantaneous ins : instantaneous) {
+            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
+                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
+                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
+                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
+                    ins.getSiteSamplingPointPK();
+            Log.d("Instantaneous: ", log);
         }
 
     }
