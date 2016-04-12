@@ -71,7 +71,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    // single data
+    // single data - need fix
 //    Instantaneous getInstantaneous(int id) {
 //        SQLiteDatabase db = this.getReadableDatabase();
 //

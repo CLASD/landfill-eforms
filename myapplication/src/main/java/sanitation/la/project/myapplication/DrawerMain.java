@@ -93,7 +93,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         db = new DatabaseHandler(this);
 
         Log.d("Insert: ", "Inserting to SQLite...");
-        // test input
+        // test input - can't access addInstantaneous from DatabaseHandler
 //        db.addInstantaneous(new Instantaneous("0", "0", "0", "22:46", "22:56", "1", "444.0", "35"));
 //        db.addInstantaneous(new Instantaneous("1", "1", "1", "18:46", "18:56", "2", "102.0",
 // "35"));
