@@ -71,14 +71,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-//    // single data
+    // single data
 //    Instantaneous getInstantaneous(int id) {
 //        SQLiteDatabase db = this.getReadableDatabase();
 //
 //        Cursor cursor = db.query(TABLE_INSTANTANEOUS, new String[] { KEY_INSTANTANEOUSDATAPK,
 //                        KEY_SITEPK, KEY_EMPLOYEEPK, KEY_STARTTIME, KEY_FINISHTIME,
 //                        KEY_INSTRUMENTPK, KEY_MAXCH, KEY_SITESAMPLINGPOINTPK },
-//                KEY_INSTANTANEOUSDATAPK + "=?", new String[] { String.valueOf(id)}, null, null, null, null, null, null, null, null, null);
+//                KEY_INSTANTANEOUSDATAPK + "=?", new String[] { String.valueOf(id)}, null, null, null);
 //        if(cursor != null) {
 //            cursor.moveToFirst();
 //        }

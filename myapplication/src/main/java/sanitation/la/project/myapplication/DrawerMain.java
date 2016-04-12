@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
@@ -45,6 +46,7 @@ import sanitation.la.project.myapplication.dummy.DummyContent;
 import sanitation.la.project.myapplication.formClass.Instantaneous;
 import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
+import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
 import sanitation.la.project.myapplication.helpers.lacDbEntry;
 import sanitation.la.project.myapplication.ui.ExportFragment;
@@ -66,6 +68,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     private GoogleMap mMap;
     private FormEntryFragment entryFrag;
     private DbHelper mDbHelper;
+    private DatabaseHandler db;
 
     private enum FORM_TYPE {INSTANTANEOUS, INTEGRATED, HOTSPOT}
 
@@ -87,6 +90,25 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     //find a reference to the view created in xml
         setSupportActionBar(toolbar);
         mDbHelper = new DbHelper(getApplicationContext());
+        db = new DatabaseHandler(this);
+
+        Log.d("Insert: ", "Inserting to SQLite...");
+        // test input
+//        db.addInstantaneous(new Instantaneous("0", "0", "0", "22:46", "22:56", "1", "444.0", "35"));
+//        db.addInstantaneous(new Instantaneous("1", "1", "1", "18:46", "18:56", "2", "102.0",
+// "35"));
+
+        List<Instantaneous> instantaneous = db.getAllInstantaneous();
+
+        // printing
+        for(Instantaneous ins : instantaneous) {
+            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
+                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
+                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
+                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
+                    ins.getSiteSamplingPointPK();
+            Log.d("Instantaneous: ", log);
+        }
 
         //saving this for later if we want to use it.
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -115,20 +137,6 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.list_container, entryFrag)
                     .commit();
-        }
-
-        // sqlite
-        DatabaseHandler db = new DatabaseHandler(this);
-        List<Instantaneous> instantaneous = db.getAllInstantaneous();
-
-        // printing
-        for(Instantaneous ins : instantaneous) {
-            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
-                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
-                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
-                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
-                    ins.getSiteSamplingPointPK();
-            Log.d("Instantaneous: ", log);
         }
 
     }
