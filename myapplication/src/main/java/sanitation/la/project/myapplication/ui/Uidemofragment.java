@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -81,6 +82,7 @@ public class Uidemofragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             fId = getArguments().getInt(ARG_FID);
+
         }
     }
 
@@ -117,6 +119,38 @@ public class Uidemofragment extends Fragment {
             formTypeText.setText("Instantaneous");
         } else if(fId == 1){
             formTypeText.setText("Hot Spot");
+
+
+            TextView t = new TextView(getContext()); //, new AttributeSet());
+            t.setText("IME");
+            EditText e = new EditText(getContext());
+            linearLayout.removeView(submitButton);
+            linearLayout.addView(t);
+            e.setTag("IME");
+            linearLayout.addView(e);
+
+            t = new TextView(getContext()); //
+            t.setText("Delay");
+            e = new EditText(getContext());
+            linearLayout.addView(t);
+            linearLayout.addView(e);
+
+            t = new TextView(getContext()); //
+            t.setText("Recheck?");
+            CheckBox b  = new CheckBox(getContext());
+            linearLayout.addView(t);
+            linearLayout.addView(b);
+
+            linearLayout.addView(submitButton);
+
+            if(getArguments() != null){
+                Bundle arg = getArguments();
+                gridText.setText(arg.getInt("GridID")+"");
+                editText1.setText(arg.getDouble("ch4ppm") + "");
+                ( (EditText) v.findViewWithTag("IME")).setText(arg.getString("IME"));
+
+            }
+
         } else if(fId == 2){
             formTypeText.setText("Integrated");
 
@@ -126,6 +160,19 @@ public class Uidemofragment extends Fragment {
             linearLayout.removeView(submitButton);
             linearLayout.addView(t);
             linearLayout.addView(e);
+
+            t = new TextView(getContext()); //, new AttributeSet());
+            t.setText("Volume (L)");
+            e = new EditText(getContext());
+            linearLayout.addView(t);
+            linearLayout.addView(e);
+
+            t = new TextView(getContext()); //
+            t.setText("Sample ID");
+            e = new EditText(getContext());
+            linearLayout.addView(t);
+            linearLayout.addView(e);
+
             linearLayout.addView(submitButton);
 
         }
@@ -162,7 +209,7 @@ public class Uidemofragment extends Fragment {
     public void submitEntry(){
 
         try {
-            entryData = new EntryData(nameText1.getText().toString(),
+            entryData = new EntryData(formTypeText.getText().toString(),
                                 Double.parseDouble(editText1.getText().toString()),
                                 Integer.parseInt(gridText.getText().toString()) ,
                                 stime.getCurrentHour()+ ":" +  stime.getCurrentMinute(),

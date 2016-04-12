@@ -32,7 +32,7 @@ public class EntryData {
     public EntryData(String name, double data, int grid, String s, String e, String d){
         this.name = name;
         this.data = new ArrayList<DataPair>();
-        this.data.add(new DataPair(data, name));
+        this.data.add(new DataPair(data, "ch4 ppm"));
         this.grid = grid;
         stime = s;
         etime = e;

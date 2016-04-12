@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.data.EntryData;
@@ -41,6 +42,8 @@ public class FormEntryFragment extends Fragment {
     private DbHelper mDbHelper;
     private int formId = 0;
 
+    private String title = "";
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -68,6 +71,10 @@ public class FormEntryFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             Bundle b = getArguments();
             formId = b.getInt("FORMID");
+
+
+            String[] n = getResources().getStringArray(R.array.form_names);
+            title = n[formId];
 
 //            Bundle b = getArguments();
 //            double d[] = b.getDoubleArray("DATA");
@@ -125,6 +132,10 @@ public class FormEntryFragment extends Fragment {
                 mListener.onAddEntryClicked(formId);
             }
         });
+
+        TextView formType = (TextView) view.findViewById(R.id.formTypeTextView);
+        formType.setText(title);
+
 
         data = mListener.getData();
         adapter = new MyArrayAdapter(getContext(),  data);
