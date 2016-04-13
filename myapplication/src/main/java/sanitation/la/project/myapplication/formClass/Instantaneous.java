@@ -1,5 +1,7 @@
 package sanitation.la.project.myapplication.formClass;
 
+import java.util.Date;
+
 /**
  * Created by Totten on 4/5/2016.
  */
@@ -10,8 +12,9 @@ public class Instantaneous {
     int EmployeePK;
     int StartTime;
     int FinishTime;
+    Date date;
     int InstrumentPK;
-    String maxCH;
+    Double maxCH;
     int SiteSamplingPointPK;
 
     public Instantaneous() {
@@ -20,7 +23,7 @@ public class Instantaneous {
 
     // constructor
     public Instantaneous(int InstantaneousDataPK, int SitePK, int EmployeePK, int StartTime, int
-            FinishTime, int InstrumentPK, String maxCH, int SiteSamplingPointPK) {
+            FinishTime, int InstrumentPK, Double maxCH, int SiteSamplingPointPK, Date date) {
         this.InstantaneousDataPK = InstantaneousDataPK;
         this.SitePK = SitePK;
         this.EmployeePK = EmployeePK;
@@ -29,8 +32,12 @@ public class Instantaneous {
         this.InstrumentPK = InstrumentPK;
         this.maxCH = maxCH;
         this.SiteSamplingPointPK = SiteSamplingPointPK;
+        this.date = date;
     }
 
+    public Date getDate(){
+        return date;
+    }
     public int getSiteSamplingPointPK() {
         return SiteSamplingPointPK;
     }
@@ -39,11 +46,11 @@ public class Instantaneous {
         SiteSamplingPointPK = SiteSamplingPointPK;
     }
 
-    public String getMaxCH() {
+    public Double getMaxCH() {
         return maxCH;
     }
 
-    public void setMaxCH(String maxCH) {
+    public void setMaxCH(Double maxCH) {
         this.maxCH = maxCH;
     }
 
@@ -93,5 +100,9 @@ public class Instantaneous {
 
     public void setInstantaneousDataPK(int InstantaneousDataPK) {
         InstantaneousDataPK = InstantaneousDataPK;
+    }
+
+    public String toString(){
+        return (this.getInstantaneousDataPK() + this.EmployeePK + this.getSitePK() + "");
     }
 }

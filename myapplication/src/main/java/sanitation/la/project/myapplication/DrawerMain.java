@@ -45,6 +45,7 @@ import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.dummy.DummyContent;
 import sanitation.la.project.myapplication.formClass.Instantaneous;
 //import sanitation.la.project.myapplication.helpers.DatabaseHandler;
+import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
 import sanitation.la.project.myapplication.helpers.lacDbEntry;
@@ -67,7 +68,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     private GoogleMap mMap;
     private FormEntryFragment entryFrag;
     private DbHelper mDbHelper;
-//    private DatabaseHandler db;
+    private DatabaseHandler db;
 
     private enum FORM_TYPE {INSTANTANEOUS, INTEGRATED, HOTSPOT}
 
@@ -88,17 +89,21 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         setContentView(R.layout.activity_drawer_main);      //set the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     //find a reference to the view created in xml
         setSupportActionBar(toolbar);
-        mDbHelper = new DbHelper(getApplicationContext());
-//        db = new DatabaseHandler(this);
+     //   mDbHelper = new DbHelper(getApplicationContext());
+        db = new DatabaseHandler(this);
 
         Log.d("Insert: ", "Inserting to SQLite...");
         // test input - can't access addInstantaneous from DatabaseHandler
-//        db.addInstantaneous(new Instantaneous("0", "0", "0", "22:46", "22:56", "1", "444.0", "35"));
+      //  db.addInstantaneous( new Instantaneous(2,2,2,2, 3, 3, 2330., 2,  new Date() ) );
 //        db.addInstantaneous(new Instantaneous("1", "1", "1", "18:46", "18:56", "2", "102.0",
 // "35"));
 
-//        List<Instantaneous> instantaneous = db.getAllInstantaneous();
+        List<Instantaneous> instantaneous = db.getAllInstantaneous();
 
+        Log.d(TAG, "Loaded " + instantaneous.size() + " entries from local db");
+
+        for(Instantaneous i: instantaneous)
+                Log.d(TAG, "Instantaneous data: " + i.toString());
         // printing
 //        for(Instantaneous ins : instantaneous) {
 //            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
@@ -192,10 +197,12 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     public void onNewEntrySubmited(EntryData e){
         Log.d(TAG, "New entry submited: " + e.getName() + " " + e.getData().get(0));
          //   addEntryToDb(e);
-        if(tempData == null)
-            tempData = new ArrayList<EntryData>();
+//        if(tempData == null)
+//            tempData = new ArrayList<EntryData>();
+        if(db != null)
+        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid(),  new Date() ) );
 
-        tempData.add(e);
+        //tempData.add(e);
 
         //it is instantaneous entry, valid and over 500 ppm
         if(formType == 0 && e.getDataSize() >=  1 && e.getData().get(0).getData() >= 500.){
@@ -264,8 +271,9 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         String name = "clasandata " + d.toString() + ".json";
         String path = "LandfillData";
         try {
-            Gson g = new Gson();
-            String t = g.toJson(tempData);
+            Gson gson = new Gson();
+            String gstr = gson.toJson(tempData); //format collected data to Json
+
             File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
             myFile.mkdirs();
             myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path+File.separator+name);
@@ -274,12 +282,16 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 //            myFile.mkdirs();
 //            myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path+File.separator+name);
 
+           // Log.d(TAG, gstr);
+
+            //write json data to a file at path/name (date)
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
-            myOutWriter.append(t);
+            myOutWriter.append(gstr);
             myOutWriter.close();
             fOut.close();
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
