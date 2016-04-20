@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,20 +31,33 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.dummy.DummyContent;
+import sanitation.la.project.myapplication.formClass.Instantaneous;
+//import sanitation.la.project.myapplication.helpers.DatabaseHandler;
+import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
 import sanitation.la.project.myapplication.helpers.lacDbEntry;
+import sanitation.la.project.myapplication.ui.ExportFragment;
 import sanitation.la.project.myapplication.ui.FormDetailFragment;
 import sanitation.la.project.myapplication.ui.FormEntryFragment;
 import sanitation.la.project.myapplication.ui.FormListFragment;
+import sanitation.la.project.myapplication.ui.FormPickerFragment;
 import sanitation.la.project.myapplication.ui.ItemFragment;
+import sanitation.la.project.myapplication.ui.LocationTestFragment;
 import sanitation.la.project.myapplication.ui.MenuFragment;
+import sanitation.la.project.myapplication.ui.MessageDialogFragment;
 import sanitation.la.project.myapplication.ui.Uidemofragment;
 
 public class DrawerMain extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback , OnFragmentInteractionListener
@@ -52,6 +68,14 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     private GoogleMap mMap;
     private FormEntryFragment entryFrag;
     private DbHelper mDbHelper;
+    private DatabaseHandler db;
+
+    private enum FORM_TYPE {INSTANTANEOUS, INTEGRATED, HOTSPOT}
+
+    private FORM_TYPE formID = FORM_TYPE.INSTANTANEOUS;
+
+
+    private int formType = 0;
 
     //very temp
     private ArrayList<EntryData> tempData;
@@ -65,7 +89,30 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         setContentView(R.layout.activity_drawer_main);      //set the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);     //find a reference to the view created in xml
         setSupportActionBar(toolbar);
-        mDbHelper = new DbHelper(getApplicationContext());
+     //   mDbHelper = new DbHelper(getApplicationContext());
+        db = new DatabaseHandler(this);
+
+        Log.d("Insert: ", "Inserting to SQLite...");
+        // test input - can't access addInstantaneous from DatabaseHandler
+      //  db.addInstantaneous( new Instantaneous(2,2,2,2, 3, 3, 2330., 2,  new Date() ) );
+//        db.addInstantaneous(new Instantaneous("1", "1", "1", "18:46", "18:56", "2", "102.0",
+// "35"));
+
+        List<Instantaneous> instantaneous = db.getAllInstantaneous();
+
+        Log.d(TAG, "Loaded " + instantaneous.size() + " entries from local db");
+
+        for(Instantaneous i: instantaneous)
+                Log.d(TAG, "Instantaneous data: " + i.toString());
+        // printing
+//        for(Instantaneous ins : instantaneous) {
+//            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
+//                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
+//                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
+//                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
+//                    ins.getSiteSamplingPointPK();
+//            Log.d("Instantaneous: ", log);
+//        }
 
         //saving this for later if we want to use it.
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -117,7 +164,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         // and add the transaction to the back stack
         Bundle b = new Bundle();
         b.putString("formArg", arg);
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", formType);
         fragment.setArguments(b);
         transaction.replace(R.id.list_container, fragment);
         transaction.addToBackStack(null);
@@ -135,7 +182,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         ContentValues values = new ContentValues();
         values.put(lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID, e.getId());
         values.put(lacDbEntry.mEntry.COLUMN_NAME_TITLE, e.getName());
-        values.put(lacDbEntry.mEntry.COLUMN_NAME_CONTENT, e.getData().get(0));
+        values.put(lacDbEntry.mEntry.COLUMN_NAME_CONTENT, e.getData().get(0).getData());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId;
@@ -150,10 +197,21 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     public void onNewEntrySubmited(EntryData e){
         Log.d(TAG, "New entry submited: " + e.getName() + " " + e.getData().get(0));
          //   addEntryToDb(e);
-        if(tempData == null)
-            tempData = new ArrayList<EntryData>();
+//        if(tempData == null)
+//            tempData = new ArrayList<EntryData>();
+        if(db != null)
+        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid(),  new Date() ) );
 
-        tempData.add(e);
+        //tempData.add(e);
+
+        //it is instantaneous entry, valid and over 500 ppm
+        if(formType == 0 && e.getDataSize() >=  1 && e.getData().get(0).getData() >= 500.){
+            Log.d(TAG, "Hot spot detected");
+
+
+            DialogFragment newFragment = MessageDialogFragment.newInstance(e);
+            newFragment.show(getSupportFragmentManager(), "dialog");
+        }
       //  tempData.addAll(e.getData());
 
 //        if(entryFrag != null)
@@ -193,10 +251,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
     }
 
     @Override
-    public void onAddEntryClicked(int data){
-            Log.d(TAG, "Add new entry triggered. Data: " + data);
+    public void onAddEntryClicked(int id){
+            Log.d(TAG, "Add new entry triggered. Data: " + id);
             tempData = entryFrag.getData();
-            showNewEntryFrag();
+            showNewEntryFrag(id);
 
     }
 
@@ -206,6 +264,76 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
     }
 
+    @Override
+    public String exportClicked(){
+        Log.d(TAG, "Export Clicked: ");
+        Date d = new Date();
+        String name = "clasandata " + d.toString() + ".json";
+        String path = "LandfillData";
+        try {
+            Gson gson = new Gson();
+            String gstr = gson.toJson(tempData); //format collected data to Json
+
+            File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
+            myFile.mkdirs();
+            myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path+File.separator+name);
+
+//            File myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path);
+//            myFile.mkdirs();
+//            myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path+File.separator+name);
+
+           // Log.d(TAG, gstr);
+
+            //write json data to a file at path/name (date)
+            myFile.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(myFile);
+            OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+            myOutWriter.append(gstr);
+            myOutWriter.close();
+            fOut.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Log.d(TAG, "Json File Exported");
+        return name;
+    }
+
+    @Override
+    public void onFormPicked(int pos){
+        if(pos == 0){
+            //instananeous
+            Log.d(TAG, "Instantaneous Form Picked");
+            formID = FORM_TYPE.INSTANTANEOUS;
+
+
+        } else if(pos == 1){
+            // hotspot
+            Log.d(TAG, "hotspot Form Picked");
+            formID = FORM_TYPE.HOTSPOT;
+        }
+        else if(pos == 2){
+            //integrated
+            Log.d(TAG, "integrated Form Picked");
+            formID = FORM_TYPE.INTEGRATED;
+        }
+
+        formType = pos;
+        //open the FormEntryFragment (list of entries for a form type)
+        showFromEntryFrag(pos);
+
+    }
+
+
+    public void openHotspotEntry(){
+        Log.d(TAG, "Creating new hot spot entry");
+        formID = FORM_TYPE.HOTSPOT;
+        formType = 1;
+        showNewHotspot();
+
+    }
 
     /****************************************************************************************
      * ****************************************************************************************
@@ -257,16 +385,23 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            showNewEntryFrag();
+            showNewEntryFrag(0);
+
+        } else if (id == R.id.nav_forms) {
+            FormPickerFragment fragment = new FormPickerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.list_container, fragment)
+                    .commit();
+            Log.d(TAG, "Adding Grid fragment");
 
         } else if (id == R.id.nav_new) {
-            ItemFragment fragment = new ItemFragment();
+            Uidemofragment fragment = new Uidemofragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.list_container, fragment)
                     .commit();
             Log.d(TAG, "Adding Grid fragment");
         } else if (id == R.id.nav_open) {
-                showFromEntryFrag();
+                showFromEntryFrag(0);
 
         } else if (id == R.id.nav_previous) {
 
@@ -278,25 +413,34 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
             }
 
         } else if (id == R.id.nav_share) {
-            Log.d(TAG, "Share/Send.");
-            if (findViewById(R.id.list_container) != null) {
-                MenuFragment mf = new MenuFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.list_container, mf)
-                        .commit();
-                Log.d(TAG, "Grid placed");
-            }
+            Log.d(TAG, "Share/Update.");
+//            if (findViewById(R.id.list_container) != null) {
+//                MenuFragment mf = new MenuFragment();
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.list_container, mf)
+//                        .commit();
+//                Log.d(TAG, "Grid placed");
+//            }
 
         } else if (id == R.id.nav_send) {
+            Log.d(TAG, "Send/Export.");
+            if (findViewById(R.id.list_container) != null) {
+                ExportFragment f = new ExportFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.list_container, f)
+                        .commit();
+                Log.d(TAG, "Export placed");
+            }
 
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_map) {
             Log.d(TAG, "Show map clicked.");
             if (findViewById(R.id.list_container) != null) {
-                SupportMapFragment mapFragment = new SupportMapFragment();
-                mapFragment.getMapAsync(this);
+                //SupportMapFragment mapFragment = new SupportMapFragment();
+                //mapFragment.getMapAsync(this);
 
+                LocationTestFragment mapFragment = new LocationTestFragment();
 
                 //MapsFragment fragment = new MapsFragment();
                 getSupportFragmentManager().beginTransaction()
@@ -312,11 +456,11 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         return true;
     }
 
-    private void showFromEntryFrag(){
+    private void showFromEntryFrag(int id){
         FormEntryFragment fragment = new FormEntryFragment();
         Bundle b = new Bundle();
        // b.putDoubleArray();
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", id);
         fragment.setArguments(b);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.list_container, fragment)
@@ -324,11 +468,29 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         Log.d(TAG, "Adding Form Entry fragment");
 
     }
-    private void showNewEntryFrag(){
+    private void showNewEntryFrag(int id){
         Uidemofragment fragment = new Uidemofragment();
         Bundle b = new Bundle();
-        b.putInt("FORMID", 1);
+        b.putInt("FORMID", id);
         fragment.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.list_container, fragment)
+                .commit();
+        Log.d(TAG, "Adding new Entry fragment");
+    }
+
+    private void showNewHotspot(){
+        Uidemofragment fragment = new Uidemofragment();
+        Bundle b = new Bundle();
+        b.putInt("FORMID", 1);   //hot spot! always
+        fragment.setArguments(b);
+        if(tempData.size() > 0 ) {
+            //pre populate
+            EntryData e = tempData.get(tempData.size() - 1);
+            b.putInt("GridID", e.getGrid());
+            b.putDouble("ch4ppm", e.getData().get(0).getData());
+            b.putString("IME", "temp123");
+        }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.list_container, fragment)
                 .commit();

@@ -4,9 +4,13 @@
     <group android:checkableBehavior="single">
 
         <item
+            android:id="@+id/nav_forms"
+            android:icon="@android:drawable/ic_dialog_dialer"
+            android:title="Form Type" />
+        <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="Input test" />
         <item
             android:id="@+id/nav_new"
             android:icon="@android:drawable/ic_menu_add"
@@ -23,7 +27,7 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="Show Map" />
+            android:title="GPS Logger" />
 
     </group>
 
@@ -36,7 +40,7 @@
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Export" />
 
             <item
                 android:id="@+id/nav_settings"

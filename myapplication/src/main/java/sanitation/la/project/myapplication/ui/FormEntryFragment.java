@@ -10,8 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import sanitation.la.project.myapplication.adapters.InstantaneousAdapter;
+import sanitation.la.project.myapplication.formClass.Instantaneous;
+import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.adapters.MyArrayAdapter;
@@ -36,9 +41,13 @@ public class FormEntryFragment extends Fragment {
     private int mColumnCount = 1;
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton addNewButton;
-    private MyArrayAdapter adapter;
+    private ArrayAdapter adapter;
     private ArrayList<EntryData> data;
-    private DbHelper mDbHelper;
+    private ArrayList<Instantaneous> instantaneousData;
+    private DatabaseHandler db;
+    private int formId = 0;
+
+    private String title = "";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -61,11 +70,20 @@ public class FormEntryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //data = new ArrayList<Double>();
-        mDbHelper = new DbHelper(getContext());
+        db = new DatabaseHandler(getContext());
+        instantaneousData = new ArrayList<>();
+        instantaneousData.addAll( db.getAllInstantaneous() );
+        Log.d(TAG, "Loaded " + instantaneousData.size() + " entries from local db");
+
         //loadFromDb();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            Bundle b = getArguments();
+            formId = b.getInt("FORMID");
 
+
+            String[] n = getResources().getStringArray(R.array.form_names);
+            title = n[formId];
 
 //            Bundle b = getArguments();
 //            double d[] = b.getDoubleArray("DATA");
@@ -84,32 +102,33 @@ public class FormEntryFragment extends Fragment {
 
     }
 
-    public void loadFromDb(){
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID,
-                lacDbEntry.mEntry.COLUMN_NAME_TITLE,
-                //lacDbEntry.mEntry.COLUMN_NAME_CONTENT,
-        };
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID + " ASC";
-        String[] args = {""};
-        Cursor c = db.query(lacDbEntry.mEntry.TABLE_NAME, projection, null, null,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                sortOrder                                 // The sort order
-        );
-
-        while(c.moveToNext()){
-            Log.d(TAG, " " + c.getString(0) + " " + c.getString(1) ); //+ " " + c.getString(2));
-
-        }
-    }
+//    // TODO: 3/3/16  make this work, and switch tables based on formId, everything else should be good
+//    public void loadFromDb(){
+//        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+//
+//        // Define a projection that specifies which columns from the database
+//        // you will actually use after this query.
+//        String[] projection = {
+//                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID,
+//                lacDbEntry.mEntry.COLUMN_NAME_TITLE,
+//                //lacDbEntry.mEntry.COLUMN_NAME_CONTENT,
+//        };
+//
+//        // How you want the results sorted in the resulting Cursor
+//        String sortOrder =
+//                lacDbEntry.mEntry.COLUMN_NAME_ENTRY_ID + " ASC";
+//        String[] args = {""};
+//        Cursor c = db.query(lacDbEntry.mEntry.TABLE_NAME, projection, null, null,                            // The values for the WHERE clause
+//                null,                                     // don't group the rows
+//                null,                                     // don't filter by row groups
+//                sortOrder                                 // The sort order
+//        );
+//
+//        while(c.moveToNext()){
+//            Log.d(TAG, " " + c.getString(0) + " " + c.getString(1) ); //+ " " + c.getString(2));
+//
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,12 +138,17 @@ public class FormEntryFragment extends Fragment {
         addNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAddEntryClicked(0);
+                mListener.onAddEntryClicked(formId);
             }
         });
 
-        data = mListener.getData();
-        adapter = new MyArrayAdapter(getContext(),  data);
+        TextView formType = (TextView) view.findViewById(R.id.formTypeTextView);
+        formType.setText(title);
+
+
+//        data = mListener.getData();
+//        adapter = new MyArrayAdapter(getContext(),  data);
+        adapter = new InstantaneousAdapter(getContext(), instantaneousData);
 
         ListView listView = (ListView) view.findViewById(R.id.list);
         listView.setAdapter(adapter);

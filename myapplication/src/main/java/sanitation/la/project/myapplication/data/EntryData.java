@@ -7,20 +7,49 @@ import java.util.ArrayList;
  */
 public class EntryData {
 
+    public class DataPair{
+        private double d;
+        private String n;
+        public DataPair(Double dat, String label){
+            d = dat;
+            n = label;
+        }
+        public String getLabel(){
+            return n;
+        }
+        public double getData(){
+            return d;
+        }
+        public String toString(){
+            return String.format("%.2f %s", d, n);
+        }
+    }
     private int id, grid;
     private String name, stime, etime, date;
-    private ArrayList<Double> data;
+    private ArrayList<DataPair> data;
 
 
     public EntryData(String name, double data, int grid, String s, String e, String d){
         this.name = name;
-        this.data = new ArrayList<Double>();
-        this.data.add(data);
+        this.data = new ArrayList<DataPair>();
+        this.data.add(new DataPair(data, "ch4 ppm"));
         this.grid = grid;
         stime = s;
         etime = e;
         date = d;
     }
+
+    public EntryData(ArrayList<DataPair> data,String s, String e, String d){
+
+        this.data = data;
+        name = "blah";
+        grid = 1;
+
+        stime = s;
+        etime = e;
+        date = d;
+    }
+
 
     public String getName(){
         return name;
@@ -29,7 +58,7 @@ public class EntryData {
         return id;
     }
 
-    public ArrayList<Double>  getData(){
+    public ArrayList<DataPair>  getData(){
         return data;
     }
 

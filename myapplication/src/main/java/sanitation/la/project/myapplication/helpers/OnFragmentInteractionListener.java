@@ -27,4 +27,6 @@ public interface OnFragmentInteractionListener {
     void onFragmentItemClicked(int i);
     void onNewEntrySubmited(EntryData e);
     ArrayList<EntryData> getData();
+    String exportClicked();
+    void onFormPicked(int pos);
 }

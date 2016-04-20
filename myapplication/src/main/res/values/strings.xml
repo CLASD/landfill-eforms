@@ -16,4 +16,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_entry_button_text">Add Entry</string>
 
+    <string name="export_fragment_text">Exporting newly collected Data</string>
+
+
+
+    <array name="form_names">
+        <item>Instantaneous</item>
+        <item>Hot Spot</item>
+        <item>Integrated</item>
+    </array>
+
 </resources>
