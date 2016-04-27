@@ -45,6 +45,7 @@ import sanitation.la.project.myapplication.data.EntryData;
 import sanitation.la.project.myapplication.dummy.DummyContent;
 import sanitation.la.project.myapplication.formClass.Instantaneous;
 //import sanitation.la.project.myapplication.helpers.DatabaseHandler;
+import sanitation.la.project.myapplication.formClass.InstantaneousModel;
 import sanitation.la.project.myapplication.helpers.DatabaseHandler;
 import sanitation.la.project.myapplication.helpers.DbHelper;
 import sanitation.la.project.myapplication.helpers.OnFragmentInteractionListener;
@@ -102,17 +103,17 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 
         Log.d(TAG, "Loaded " + instantaneous.size() + " entries from local db");
 
-        for(Instantaneous i: instantaneous)
-                Log.d(TAG, "Instantaneous data: " + i.toString());
+//        for(Instantaneous i: instantaneous)
+//                Log.d(TAG, "Instantaneous data: " + i.toString());
         // printing
-//        for(Instantaneous ins : instantaneous) {
-//            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
-//                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
-//                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
-//                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
-//                    ins.getSiteSamplingPointPK();
-//            Log.d("Instantaneous: ", log);
-//        }
+        for(Instantaneous ins : instantaneous) {
+            String log = "ID: " + ins.getInstantaneousDataPK() + ", SitePK: " + ins.getSitePK() +
+                    ", EmployeePK: " + ins.getEmployeePK() + ", StartTime: " + ins.getStartTime()
+                    + ", FinishTime: " + ins.getFinishTime() + ", InstrumentPK: " + ins
+                    .getInstrumentPK() + ", MaxCH: " + ins.getMaxCH() + ", SiteSamplingPoint: " +
+                    ins.getSiteSamplingPointPK();
+            Log.d("Instantaneous: ", log);
+        }
 
         //saving this for later if we want to use it.
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -200,7 +201,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 //        if(tempData == null)
 //            tempData = new ArrayList<EntryData>();
         if(db != null)
-        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid(),  new Date() ) );
+//        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid(),  new Date() ) );
 
         //tempData.add(e);
 
@@ -271,8 +272,10 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         String name = "clasandata " + d.toString() + ".json";
         String path = "LandfillData";
         try {
+            Instantaneous instantaneous = new Instantaneous(1, 1, 1, 1230, 1235, 20160527, 1, 444.0, 1);
             Gson gson = new Gson();
-            String gstr = gson.toJson(tempData); //format collected data to Json
+//            String gstr = gson.toJson(tempData); //format collected data to Json
+            String gstr = gson.toJson(instantaneous.toString());
 
             File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
             myFile.mkdirs();

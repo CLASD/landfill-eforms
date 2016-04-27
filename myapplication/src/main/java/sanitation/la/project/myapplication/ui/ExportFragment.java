@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import sanitation.la.project.myapplication.R;
+import sanitation.la.project.myapplication.formClass.Instantaneous;
+import sanitation.la.project.myapplication.formClass.InstantaneousModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,24 +42,38 @@ public class ExportFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if(v == exportButton)
-        {
-            Log.d(TAG, "Export Clicked.");
+//        if(v == exportButton)
+//        {
+//            Log.d(TAG, "Export Clicked.");
+//            String s = mListener.exportClicked();
+//           if( s != null){
+//               Toast t  = Toast.makeText(getContext(), "File Exported: " + s, Toast.LENGTH_LONG);
+//               t.show();
+//            }
+//
+////            Gson g = new Gson();
+////            g.toJson("JSon Test");
+////            g.toJson(100);
+////            g.toJson("abc123");
+////            String t = g.toJson("IT works?");
+////            Log.d(TAG, "Gson Test: ");
+////            Log.d(TAG, t);
+//
+//
+//        }
+
+        if(v == exportButton) {
             String s = mListener.exportClicked();
-           if( s != null){
-               Toast t  = Toast.makeText(getContext(), "File Exported: " + s, Toast.LENGTH_LONG);
-               t.show();
-        }
-
-//            Gson g = new Gson();
-//            g.toJson("JSon Test");
-//            g.toJson(100);
-//            g.toJson("abc123");
-//            String t = g.toJson("IT works?");
-//            Log.d(TAG, "Gson Test: ");
-//            Log.d(TAG, t);
-
-
+            if(s != null) {
+                Toast t = Toast.makeText(getContext(), "File Exported: " + s, Toast.LENGTH_LONG);
+                t.show();
+            }
+            Instantaneous instantaneous = new Instantaneous();
+            Log.d(TAG, "Export Clicked.");
+            Gson gson = new Gson();
+            InstantaneousModel instantaneousModel = new InstantaneousModel(1, 1, 1, 1230, 1235, 20160527, 1, 444.0, 1);
+            gson.toJson(instantaneousModel.toString());
+            Log.d("JSON", instantaneousModel.toString());
         }
     }
 }
