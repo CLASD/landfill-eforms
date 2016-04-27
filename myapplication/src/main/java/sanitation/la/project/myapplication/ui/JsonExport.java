@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import sanitation.la.project.myapplication.R;
+import sanitation.la.project.myapplication.formClass.InstantaneousModel;
 
 /**
  * Created by Totten on 4/20/2016.
@@ -51,10 +52,12 @@ public class JsonExport extends Activity {
                         // creates folder
                         root.mkdirs();
                     }
+                    InstantaneousModel instantaneousModel = new InstantaneousModel(1, 1, 1, 1230, 1235, 20160527, 1, 444.0, 1);
                     File filepath = new File(root, instantaneous + fileName + ".json");
                     FileWriter writer = new FileWriter(filepath);
-                    writer.append(gridEditText.getText().toString());
-                    writer.append(data1EditText.getText().toString());
+                    writer.append(instantaneousModel.toString());
+//                    writer.append(gridEditText.getText().toString());
+//                    writer.append(data1EditText.getText().toString());
                     writer.flush();
                     writer.close();
                     String test = "File " + instantaneous + fileName + ".json";

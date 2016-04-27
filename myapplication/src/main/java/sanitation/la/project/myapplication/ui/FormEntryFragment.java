@@ -153,7 +153,7 @@ public class FormEntryFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.list);
         listView.setAdapter(adapter);
 
-                // Set the adapter
+                 // Set the adapter
 //        if (view instanceof RecyclerView) {
 //            Context context = view.getContext();
 //            RecyclerView recyclerView = (RecyclerView) view;

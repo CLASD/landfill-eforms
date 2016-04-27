@@ -14,6 +14,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import sanitation.la.project.myapplication.formClass.Instantaneous;
 
@@ -40,7 +41,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_INSTANTANEOUS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_INSTANTANEOUS +
                 "(" +
-                KEY_INSTANTANEOUSDATAPK + " INTEGER PRIMARY KEY," + KEY_SITEPK + " INT," +
+                KEY_INSTANTANEOUSDATAPK + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," + KEY_SITEPK + " INT," +
                 KEY_EMPLOYEEPK + " INT," + KEY_STARTTIME + " DATETIME," + KEY_FINISHTIME + " " +
                 "DATETIME," + KEY_INSTRUMENTPK + " INT," + KEY_MAXCH + " VARCHAR(45)," +
                 KEY_SITESAMPLINGPOINTPK + " INT" + ")";
@@ -72,24 +73,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // single data - need fix
-//    Instantaneous getInstantaneous(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = db.query(TABLE_INSTANTANEOUS, new String[] { KEY_INSTANTANEOUSDATAPK,
-//                        KEY_SITEPK, KEY_EMPLOYEEPK, KEY_STARTTIME, KEY_FINISHTIME,
-//                        KEY_INSTRUMENTPK, KEY_MAXCH, KEY_SITESAMPLINGPOINTPK },
-//                KEY_INSTANTANEOUSDATAPK + "=?", new String[] { String.valueOf(id)}, null, null, null);
-//        if(cursor != null) {
-//            cursor.moveToFirst();
-//        }
-//
+    Instantaneous getInstantaneous(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_INSTANTANEOUS, new String[] { KEY_INSTANTANEOUSDATAPK,
+                        KEY_SITEPK, KEY_EMPLOYEEPK, KEY_STARTTIME, KEY_FINISHTIME,
+                        KEY_INSTRUMENTPK, KEY_MAXCH, KEY_SITESAMPLINGPOINTPK },
+                KEY_INSTANTANEOUSDATAPK + "=?", new String[] { String.valueOf(id)}, null, null, null);
+        if(cursor != null) {
+            cursor.moveToFirst();
+        }
+
 //        Instantaneous instantaneous = new Instantaneous(Integer.parseInt(cursor.getString(0)),
 //                cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString
 //                (4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor
 //                .getString(8));
 //
 //        return instantaneous;
-//    }
+        return null;
+    }
 
     // all data
     public List<Instantaneous> getAllInstantaneous() {
@@ -154,6 +156,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(countQuery, null);
         int c = cursor.getCount();
         cursor.close();
+
+        Log.d("data", db.toString());
 
         // return count
         return c;
