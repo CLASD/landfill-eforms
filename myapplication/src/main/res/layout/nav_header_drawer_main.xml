@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
@@ -13,22 +13,46 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/iconsize"
-        android:layout_height="@dimen/iconsize"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/cla_seal_t" />
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/cla_seal_t"
+        android:paddingTop="10dp"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignRight="@+id/textView18"
+        android:layout_alignEnd="@+id/textView18"
+        android:layout_marginBottom="26dp" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/imageView2"
+        android:src="@drawable/la_sanitation_logo"
+        android:layout_gravity="right"
+        android:paddingTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/sidebarTitle"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/textView18"
+        android:layout_above="@+id/formTypeTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/formTypeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sidebarsubTitle" />
+        android:text="@string/sidebarsubTitle"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-</LinearLayout>
+</RelativeLayout>

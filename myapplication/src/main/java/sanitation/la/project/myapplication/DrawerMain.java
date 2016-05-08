@@ -201,7 +201,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 //        if(tempData == null)
 //            tempData = new ArrayList<EntryData>();
         if(db != null)
-//        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid(),  new Date() ) );
+        db.addInstantaneous( new Instantaneous(db.getInstantaneousCount()+2,2,2,2, 3, 3, e.getData().get(0).getData(), e.getGrid()));
 
         //tempData.add(e);
 
@@ -272,7 +272,7 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
         String name = "clasandata " + d.toString() + ".json";
         String path = "LandfillData";
         try {
-            Instantaneous instantaneous = new Instantaneous(1, 1, 1, 1230, 1235, 20160527, 1, 444.0, 1);
+            Instantaneous instantaneous = new Instantaneous(1, 1, 1, 1230, 1235, 1, 444.0, 1);
             Gson gson = new Gson();
 //            String gstr = gson.toJson(tempData); //format collected data to Json
             String gstr = gson.toJson(instantaneous.toString());

@@ -12,7 +12,6 @@ public class Instantaneous {
     int EmployeePK;
     int StartTime;
     int FinishTime;
-    int date;
     int InstrumentPK;
     Double maxCH;
     int SiteSamplingPointPK;
@@ -22,7 +21,7 @@ public class Instantaneous {
     }
 
     // constructor
-    public Instantaneous(int InstantaneousDataPK, int SitePK, int EmployeePK, int StartTime, int FinishTime, int date, int InstrumentPK, Double maxCH, int SiteSamplingPointPK) {
+    public Instantaneous(int InstantaneousDataPK, int SitePK, int EmployeePK, int StartTime, int FinishTime, int InstrumentPK, Double maxCH, int SiteSamplingPointPK) {
         this.InstantaneousDataPK = InstantaneousDataPK;
         this.SitePK = SitePK;
         this.EmployeePK = EmployeePK;
@@ -31,12 +30,8 @@ public class Instantaneous {
         this.InstrumentPK = InstrumentPK;
         this.maxCH = maxCH;
         this.SiteSamplingPointPK = SiteSamplingPointPK;
-        this.date = date;
     }
 
-    public int getDate(){
-        return date;
-    }
     public int getSiteSamplingPointPK() {
         return SiteSamplingPointPK;
     }
@@ -107,6 +102,6 @@ public class Instantaneous {
 
     @Override
     public String toString() {
-        return "{\"InstantaneousData\":[{Instantaneous:" + InstantaneousDataPK + ", SitePK:" + SitePK + ", EmployeePK:" + EmployeePK + ", StartTime:" + StartTime + ", FinishTime:" + FinishTime + ", date:" + date + ", InstrumentPK:" + InstrumentPK + ", maxCH:" + maxCH + "SiteSamplingPointPK:" + SiteSamplingPointPK + "}]}";
+        return "{\"Instantaneous\":" + InstantaneousDataPK + ", \"SitePK\":" + SitePK + ", \"EmployeePK\":" + EmployeePK + ", \"StartTime\":" + StartTime + ", \"FinishTime\":" + FinishTime + ", \"InstrumentPK\":" + InstrumentPK + ", \"maxCH\":\"" + maxCH + "\", \"SiteSamplingPointPK\":" + SiteSamplingPointPK + "}";
     }
 }

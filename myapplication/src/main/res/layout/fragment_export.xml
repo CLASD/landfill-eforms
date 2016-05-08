@@ -17,53 +17,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/export_fragment_text"
-            android:textSize="30dp"
+            android:gravity="center"
+            android:textSize="50dp"
             android:padding="10dp" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center_horizontal"
-            android:padding="10dp">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Do"
-                android:id="@+id/radioButton6"
-                android:padding="10dp" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Some"
-                android:id="@+id/radioButton7"
-                android:padding="10dp" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thing"
-                android:id="@+id/radioButton5"
-                android:padding="10dp" />
-
-        </LinearLayout>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Switch"
-            android:id="@+id/switch3" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Export"
+            android:layout_marginTop="50dp"
             android:id="@+id/ebutton"
-            android:layout_gravity="center_horizontal"
             android:padding="20dp" />
 
         <TextView
