@@ -277,6 +277,8 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 //            String gstr = gson.toJson(tempData); //format collected data to Json
             String gstr = gson.toJson(instantaneous.toString());
 
+//            String test = gson.toJson(instantaneous);
+
             File myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path);
             myFile.mkdirs();
             myFile = new File(Environment.getExternalStorageDirectory()+File.separator+path+File.separator+name);
@@ -286,12 +288,14 @@ public class DrawerMain extends AppCompatActivity  implements NavigationView.OnN
 //            myFile = new File("Removable"+File.separator+path + "USBdisk1" +File.separator+path+File.separator+name);
 
            // Log.d(TAG, gstr);
+//            Log.d(TAG, test);
 
             //write json data to a file at path/name (date)
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
-            OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             myOutWriter.append(gstr);
+//            myOutWriter.append(test);
             myOutWriter.close();
             fOut.close();
 

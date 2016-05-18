@@ -12,7 +12,7 @@
         jar="C:\Users\Totten\Documents\School\SeniorDesign\landfill-eforms\myapplication\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="23.0.2"
-        sha1="71d1d2086b0d7c9839edd3133134d503e23686f6">
+        sha1="3c3a23955252c4e598fedc73c00822190e597061">
         <dex dex="C:\Users\Totten\Documents\School\SeniorDesign\landfill-eforms\myapplication\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_4f893df98489e29e73a9c79d9aa738d19a518d6f\classes.dex" />
     </item>
     <item
@@ -236,7 +236,7 @@
         jar="C:\Users\Totten\Documents\School\SeniorDesign\landfill-eforms\myapplication\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.2"
-        sha1="cd475875254321304ddbc59d2bf32d6e1b605dd2">
+        sha1="2e24a5f4580aedaa3703ba089116b45fbe3b1f02">
         <dex dex="C:\Users\Totten\Documents\School\SeniorDesign\landfill-eforms\myapplication\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_15c09a745d48b7f80ac0c5a8cb1d99a7c64ea8b5\classes.dex" />
     </item>
     <item
